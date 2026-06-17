@@ -1,0 +1,301 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8e9fcde1-aa40-4050-b877-a951f8749c64",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "star-parent-rag1",
+          "mode": "list",
+          "cachedResultName": "star-parent-rag1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "35cc03de-b200-4e6d-b4de-fc868846daee",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "C90LFjWPmTljYJoX",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "={{ \"Qwen/Qwen3-Embedding-8B\" }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        208
+      ],
+      "id": "2cff1ed0-70e7-4ad3-8674-46c8ff3d8177",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wlTGKw8LjBp7JRQk",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Paste this into an n8n Code node (Run Once for All Items).\n// Outputs one item per corpus document, with text + filename metadata.\nconst docs = [\n  {\n    \"filename\": \"01_star_overview_for_parents.md\",\n    \"text\": \"# Understanding the STAR Assessment: A Guide for Parents\\n\\n> **NOTE: This is synthetic, sample material created for a demonstration project. Student names, scores, and reports in this corpus are entirely fictional. For your own child's results, always rely on your school's official Renaissance reports and your child's teacher.**\\n\\n## What the STAR Assessment is\\n\\nSTAR is a computer-adaptive assessment developed by Renaissance that many U.S. schools use to check how students are progressing in reading and math. Schools typically give it a few times a year (often fall, winter, and spring) to see where each student is and whether they are growing over time.\\n\\n\\\"Computer-adaptive\\\" means the test adjusts itself to your child as they go. When a student answers a question correctly, the next question gets a little harder. When they miss one, the next gets a little easier. This lets the test find a student's level fairly quickly without asking hundreds of questions.\\n\\n## The three main STAR tests\\n\\n- **STAR Early Literacy** — used with younger students (roughly Pre-K through early elementary) to check foundational reading skills like letter sounds, phonics, and early comprehension.\\n- **STAR Reading** — used once students are reading independently to measure overall reading achievement.\\n- **STAR Math** — measures math achievement across number skills, operations, and other areas.\\n\\nYour school decides which test your child takes, when they take it, and how the results are used.\\n\\n## What STAR is — and is not\\n\\nSTAR is a **screening tool**. It is one useful data point, not a complete picture. It is **not** a diagnosis, and it is not meant to stand on its own. A single STAR score read in isolation is easy to misunderstand. The most reliable picture comes from looking at the whole report, your child's growth across testing windows, and your child's everyday classroom work — together with what the teacher observes.\\n\\nSchools generally should not use STAR as the sole deciding factor for high-stakes decisions about a child, such as qualifying for special programs. It is one of several pieces of information.\\n\\n## How often the test is given\\n\\nMost schools test in seasonal \\\"windows\\\" — commonly fall, winter, and spring. Comparing a child's scores across these windows is often more meaningful than any single score, because it shows whether the child is growing.\\n\"\n  },\n  {\n    \"filename\": \"02_understanding_your_scores.md\",\n    \"text\": \"# Understanding Your Child's STAR Scores\\n\\n> **NOTE: This is synthetic, sample material for a demonstration project. All examples use fictional numbers. For your own child's results, rely on your school's official reports and teacher.**\\n\\nA STAR report shows several different scores. Each answers a different question. Parents often focus on just one number, but they make the most sense when read together.\\n\\n## Scaled Score (SS)\\n\\nThe Scaled Score is usually the most important number for tracking growth. It is calculated from the difficulty of the questions your child saw and how many they answered correctly. On the unified scale, scaled scores range from roughly 0 to 1400 (STAR Early Literacy uses a narrower range, roughly 200 to 1100).\\n\\nBecause the same scale is used for every student regardless of grade, the Scaled Score lets you compare your child's performance **over time and across grades**. The key question it answers is: *Is my child growing from one testing window to the next?*\\n\\nTip: Do not compare Scaled Scores across different STAR products (for example, Reading versus Math) without guidance from the teacher — the scales are not interchangeable that way.\\n\\n## Percentile Rank (PR)\\n\\nThe Percentile Rank ranges from 1 to 99 and compares your child to other students **in the same grade nationally**. A PR of 60 means your child scored as well as or better than 60% of students in their grade across the country.\\n\\nPercentile Rank is context, not a judgment. A PR of 40 does not mean your child is \\\"failing\\\" — it means they performed better than 40% of students nationwide. It should always be read alongside the Scaled Score and growth.\\n\\n## Grade Equivalent (GE)\\n\\nThe Grade Equivalent estimates the grade and month at which your child's performance matches the national average. For example, GE 4.5 means the child performed about as well as the average student in the fifth month of fourth grade.\\n\\nGE is easy to misread. A fifth-grader with a GE of 7.2 is **not** ready for seventh-grade material — it simply means they performed well above the typical fifth-grade level on this test. GE is best used as a rough reference, read together with the other scores.\\n\\n## Student Growth Percentile (SGP)\\n\\nThe Student Growth Percentile ranges from 1 to 99 and describes how much your child grew compared to **academic peers** — other students who started at a similar achievement level. An SGP of 65 means your child grew more than 65% of students who had a similar starting point. SGP is especially useful because a child who is below grade level can still show strong growth.\\n\\n## Benchmark / Performance Level\\n\\nSchools group scores into performance categories to show whether a student is on track. These categories are commonly tied to percentile ranges. A widely used set of labels is:\\n\\n- **At/Above Benchmark** — on track; often defined as a Percentile Rank of 40 or higher.\\n- **On Watch** — slightly below the benchmark; the school monitors progress (often roughly PR 25–39).\\n- **Intervention** — below expectations; extra support is usually recommended (often roughly PR 10–24).\\n- **Urgent Intervention** — well below expectations; intensive support is usually recommended (often roughly PR below 10).\\n\\n**Important:** the exact cut scores for these categories are set by each state, district, or school, so the ranges above are typical examples rather than fixed national rules. If you want to know the precise benchmark used for your child, ask the teacher or school.\\n\\n## Domain / Skill Scores\\n\\nMany reports break performance into specific skill areas (for example, in reading: vocabulary, comprehension, analyzing text). These domain scores can show relative strengths and areas to work on, but they are based on fewer questions than the overall score, so treat them as a guide rather than a precise measurement.\\n\"\n  },\n  {\n    \"filename\": \"03_sample_score_reports.md\",\n    \"text\": \"# Sample STAR Score Reports (Synthetic Examples)\\n\\n> **NOTE: Every student, score, and detail below is INVENTED for a demonstration project. These are not real children and not real results. They exist to show how to read a report. Your child's actual report may look different and should be interpreted with their teacher.**\\n\\nThese four examples show different profiles parents commonly see. Each includes the numbers and a plain-language interpretation.\\n\\n---\\n\\n## Sample Report A — Maya R., Grade 4, STAR Reading (Winter window)\\n\\n| Score | Value |\\n|-------|-------|\\n| Scaled Score (SS) | 642 |\\n| Percentile Rank (PR) | 82 |\\n| Grade Equivalent (GE) | 6.1 |\\n| Student Growth Percentile (SGP) | 71 |\\n| Performance Level | At/Above Benchmark |\\n\\n**How to read this:** Maya is performing well above the typical fourth-grade level. Her PR of 82 means she scored as well as or better than 82% of fourth-graders nationally. Her GE of 6.1 does **not** mean she should be doing sixth-grade work — it means her reading performance resembles that of an average student early in sixth grade. Her SGP of 71 shows she also grew more than most peers who started where she did, so she is not just high — she is still climbing. This is a strong, healthy profile.\\n\\n---\\n\\n## Sample Report B — Daniel K., Grade 6, STAR Reading (Winter window)\\n\\n| Score | Value |\\n|-------|-------|\\n| Scaled Score (SS) | 588 |\\n| Percentile Rank (PR) | 31 |\\n| Grade Equivalent (GE) | 4.8 |\\n| Student Growth Percentile (SGP) | 58 |\\n| Performance Level | On Watch |\\n\\n**How to read this:** Daniel is a little below the benchmark but not far off. His PR of 31 places him below the common \\\"benchmark met\\\" line of 40, which is why he shows as \\\"On Watch\\\" rather than \\\"At/Above Benchmark.\\\" However — and this is the important part — his SGP of 58 means he is growing **faster than more than half** of students who started at a similar level. So while he has not yet reached grade-level expectations, he is moving in the right direction. The school will likely monitor him rather than place him in formal intervention. This is the kind of \\\"mixed\\\" report that is easy to misread if you only look at the percentile.\\n\\n---\\n\\n## Sample Report C — Sofia M., Grade 3, STAR Reading (Winter window)\\n\\n| Score | Value |\\n|-------|-------|\\n| Scaled Score (SS) | 412 |\\n| Percentile Rank (PR) | 8 |\\n| Grade Equivalent (GE) | 1.9 |\\n| Student Growth Percentile (SGP) | 22 |\\n| Performance Level | Urgent Intervention |\\n\\n**How to read this:** Sofia is performing well below grade-level expectations. A PR of 8 means she scored higher than about 8% of third-graders nationally, and her SGP of 22 means her growth has also been slower than most similar peers. The \\\"Urgent Intervention\\\" label signals that she would benefit from intensive, focused reading support. This is not a verdict on Sofia's ability or potential — it is a signal that she needs more help now. A productive next step is a conversation with her teacher about what support the school can put in place and what would help at home.\\n\\n---\\n\\n## Sample Report D — Aiden T., Grade 5, STAR Math (Winter window)\\n\\n| Score | Value |\\n|-------|-------|\\n| Scaled Score (SS) | 795 |\\n| Percentile Rank (PR) | 54 |\\n| Grade Equivalent (GE) | 5.6 |\\n| Student Growth Percentile (SGP) | 49 |\\n| Performance Level | At/Above Benchmark |\\n\\n**How to read this:** Aiden is right around the middle. His PR of 54 means he scored a little above the national average for fifth-graders in math, and his performance level is \\\"At/Above Benchmark\\\" because he is past the common PR-40 line. His SGP of 49 means his growth is about average — roughly in the middle of peers who started where he did. This is a solid, on-track profile with no red flags. A reasonable goal would be steady growth into the next window.\\n\\n---\\n\\n## A note on reading these together\\n\\nNotice that the percentile alone can mislead. Daniel (B) looks \\\"behind\\\" on percentile but is growing well. Sofia (C) is behind on both achievement and growth, which is why her report calls for urgent support. Always read achievement (SS, PR) **and** growth (SGP) together, and bring questions to the teacher.\\n\"\n  },\n  {\n    \"filename\": \"04_parent_faq.md\",\n    \"text\": \"# STAR Assessment: Frequently Asked Questions for Parents\\n\\n> **NOTE: Synthetic sample material for a demonstration project. For your child's specific situation, consult their teacher and your school's official reports.**\\n\\n**What is a \\\"good\\\" STAR score?**\\nThere is no single number that is universally \\\"good.\\\" A good score depends on your child's grade, the testing window, the subject, your school's benchmark, and your child's own growth history. A Percentile Rank of 40 or above is commonly treated as \\\"benchmark met,\\\" but the most useful answer comes from comparing your child to their own past scores and asking the teacher how the result compares to school expectations.\\n\\n**My child's percentile dropped from fall to winter. Should I worry?**\\nNot necessarily, but it is worth a conversation. Percentile Rank compares your child to other students, so it can shift even when your child is learning. Look at the Scaled Score and the Student Growth Percentile too — if the Scaled Score went up, your child is still learning, even if their rank relative to peers moved. Ask the teacher for context.\\n\\n**What does it mean if my child is labeled \\\"On Watch\\\" or \\\"Intervention\\\"?**\\nThese are performance levels tied to score ranges. \\\"On Watch\\\" usually means slightly below the benchmark, where the school keeps an eye on progress. \\\"Intervention\\\" and \\\"Urgent Intervention\\\" mean the school recommends extra support. The exact cut scores are set by your district, so ask what benchmark your school uses and what support is available.\\n\\n**Is the Grade Equivalent the grade my child should be working at?**\\nNo. Grade Equivalent is a comparison to national norms, not a placement recommendation. A third-grader with a GE of 5.0 performed like an average fifth-grader *on this test* — it does not mean they should be doing fifth-grade work. Use it as a rough reference only.\\n\\n**Can my child study or prepare for the STAR test?**\\nSTAR is mainly designed to measure current achievement, not something to cram for. The best preparation is ongoing: regular reading and math practice, and familiarity with how the test works so test day feels comfortable. Talk to the teacher about helpful practice.\\n\\n**Why did my child get questions that seemed too hard (or too easy)?**\\nSTAR is adaptive, so difficulty adjusts as your child answers. Seeing some hard questions is normal and expected — the test is finding your child's level. Encountering challenging items does not mean your child did poorly.\\n\\n**Where do I find my child's results?**\\nSTAR results are usually available through the Renaissance system your school provides, or sent home as a family report. If you cannot find them, ask your child's teacher or the school office for a copy and an explanation.\\n\\n**Should this score determine whether my child gets into a special program?**\\nSTAR is one data point and generally should not be the sole factor in high-stakes decisions. If a placement decision is being made, ask what other information is being considered alongside the STAR results.\\n\"\n  },\n  {\n    \"filename\": \"05_supporting_your_child_at_home.md\",\n    \"text\": \"# Supporting Your Child After a STAR Assessment\\n\\n> **NOTE: Synthetic sample material for a demonstration project. These are general suggestions, not personalized advice. Work with your child's teacher for a plan suited to your child.**\\n\\nA STAR report is most useful when it leads to a conversation and a few concrete next steps. Here is how to act on the results constructively.\\n\\n## Start with the teacher\\n\\nThe single most useful step is a short conversation with your child's teacher. Helpful questions to ask:\\n\\n- How does this score compare to our school's benchmark and to my child's previous scores?\\n- Is my child growing at a healthy rate (what does the Student Growth Percentile suggest)?\\n- Are there specific skill areas to focus on?\\n- What support is available at school, and what can I do at home?\\n\\n## Frame the results positively for your child\\n\\nChildren often sense how parents react to scores. STAR measures a moment in time, not your child's worth or ceiling. Emphasize growth and effort rather than a single number. A child who is \\\"behind\\\" on percentile can still be growing well — and growth is what compounds over time.\\n\\n## If your child is at or above benchmark\\n\\nKeep the momentum: maintain regular reading and math habits, offer gently challenging material, and let your child pursue topics they enjoy. The goal is continued growth, not pressure to stay at the top.\\n\\n## If your child is \\\"On Watch\\\"\\n\\nThis is usually a monitor-and-support situation, not an alarm. Build consistent reading and math routines, celebrate small wins, and check in with the teacher about light-touch support. Often steady practice is enough to move a child back toward the benchmark.\\n\\n## If your child is in \\\"Intervention\\\" or \\\"Urgent Intervention\\\"\\n\\nThis is a signal that your child needs more focused help now — not a judgment of ability. Partner closely with the school on an intervention plan, keep home practice short and encouraging rather than stressful, and track progress across the next testing windows. Many children make strong gains once the right support is in place.\\n\\n## General habits that help\\n\\n- **Read together daily**, even for short periods, and talk about what you read.\\n- **Make math part of everyday life** — cooking, shopping, games with numbers.\\n- **Keep practice low-stress.** Short, positive, consistent sessions beat long, anxious ones.\\n- **Watch growth over time**, not a single score. Compare each window to the last.\\n\\n## What not to do\\n\\n- Do not treat one score as a final verdict.\\n- Do not compare your child to siblings or classmates by percentile.\\n- Do not push test \\\"cramming\\\" — ongoing learning matters more than test-day prep.\\n\"\n  }\n];\n\nreturn docs.map(d => ({ json: { text: d.text, filename: d.filename } }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f8bbfae5-c1f0-4bd8-945c-3ed0e59bf935",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        96
+      ],
+      "id": "53ffacc2-af55-4d66-899b-a71dc029119c",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! 👋 I'm here to help you understand your child's STAR assessment results. You can ask me things like \"What does my child's percentile rank mean?\" or \"What is a scaled score?\" I'll answer using official STAR parent guidance — and if I don't know something, I'll tell you to check with your school.",
+        "options": {
+          "subtitle": "Ask me anything about your child's STAR assessment results — what the scores mean and how to support their learning.",
+          "title": "STAR Parent Helper 🎓"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        464,
+        -256
+      ],
+      "id": "32ab3cea-ee47-4b11-82d1-31621717d3d7",
+      "name": "When chat message received",
+      "webhookId": "b0b29356-226a-4020-a685-a83717f7bca4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant that answers parents' questions about the STAR assessment using ONLY the information retrieved from the knowledge base. If the retrieved documents do not contain the answer, say you don't have that information and suggest the parent contact their child's teacher or school. Never invent scores, policies, or facts. Keep answers clear and friendly for a non-expert parent."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        -336
+      ],
+      "id": "86652ad3-34b1-481d-ae97-6ef2b9bbc681",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "={{ \"Qwen/Qwen3-235B-A22B-Instruct-2507\" }}",
+          "mode": "id"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        144
+      ],
+      "id": "b6c62b49-4bf2-4d67-8822-ff2c7bd1082c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wlTGKw8LjBp7JRQk",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Search the STAR assessment parent guide for information about score types (scaled score, percentile rank, grade equivalent, student growth percentile), benchmark categories, sample score reports, and how parents can support their child. Use this for any question about STAR results.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "star-parent-rag1",
+          "mode": "list",
+          "cachedResultName": "star-parent-rag1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1184,
+        -32
+      ],
+      "id": "4c6c3336-9ae1-4d50-a442-9d6d07908a16",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "C90LFjWPmTljYJoX",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "={{ \"Qwen/Qwen3-Embedding-8B\" }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        144
+      ],
+      "id": "2fe989a4-ab39-4692-8b45-114666ec63b9",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wlTGKw8LjBp7JRQk",
+          "name": "OpenAI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f473e99b-b24c-4879-bb0f-38be1a157adf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48eaa6089e00194f6c6ae9b8f255c19bf2c771c5783a2a59ebf0e52ae723f09a"
+  },
+  "nodeGroups": [],
+  "id": "6q5L3NfZfTqkACIB",
+  "tags": []
+}
